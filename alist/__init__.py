@@ -9,6 +9,7 @@ import json
 from urllib.parse import urlparse
 from alist.public import AlistPublic
 from alist.admin import AlistAdmin
+import hashlib
 
 class AlistClient(object):
     """
@@ -16,15 +17,53 @@ class AlistClient(object):
     """
     def __init__(
         self,
-        base_url
+        base_url,
+        password = None,
+        authorization = None,
     ):
         self.base_url = base_url.rstrip('/')
         self.public = AlistPublic(self)
-        self.admin  = AlistAdmin(self)
+        self.admin  = None
         self.session = Session()
         self.password = ""
 
         self.url = urlparse(self.base_url)
+
+        self.authorization = None
+        self.login(password, authorization)
+
+    def calc_authorization(self, password):
+        """ 根据密码计算出 authorization
+        :param password: 登录密码
+        :returns: authorization
+        """
+        magic = f'https://github.com/Xhofe/alist-{password}'
+        return hashlib.md5(magic.encode('utf8')).hexdigest()
+
+    def login(self, password = None, authorization = None):
+        """ 登录
+        :returns:
+            登录成功返回Ture，登录失败触发异常。
+        """
+        if self.is_login():
+            return True
+
+        self.authorization = authorization
+        self.password = password
+        if self.password != None and self.authorization == None:
+            self.authorization = self.calc_authorization(self.password)
+
+        if self.authorization:
+            self.admin = AlistAdmin(self)
+            return self.admin.login()
+        return False
+
+    def is_login(self):
+        """ 是否登录
+        :returns:
+            如果已登录，返回True；否则返回Flase。
+        """
+        return self.authorization != None
 
     @staticmethod
     def decode_response(response):
@@ -67,6 +106,7 @@ class AlistClient(object):
             "Scheme": self.url.scheme,
             "Accept": "application/json, text/plain, */*",
             "Origin": self.base_url,
+            "Authorization": self.authorization,
             # "Content-Type": "application/json;charset=UTF-8", # requests 自动填充
         }
         request_kwargs = kwargs
