@@ -91,8 +91,11 @@ class AlistClient(object):
         if content['code'] != 200:
             response.status_code = content['code']
             raise HTTPError(content['code'], content['message'], response=response)
-            # raise HTTPError(content['message'], code=content['code'], response=response)
-        return content['data']
+
+        if content['data'] is None:
+            return True
+        else:
+            return content['data']
 
     def get_request_dict(self, method, endpoint, **kwargs):
         """
