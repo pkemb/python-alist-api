@@ -2,12 +2,18 @@
 # -*- coding:utf-8 -*-
 # @Author: Kai Peng
 
+# doc: https://alist-doc.nn.ci/docs/api
+
 class AlistPublic(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/public'
 
     def path(self, path, page_num=1, page_size=30, password=None):
+        """ 根据路径和密码请求文件或文件列表。
+        :returns:
+            文件或目录属性，以及文件列表。
+        """
         endpoint = f'{self.endpoint}/path'
         data = {
             'path': path,
@@ -19,6 +25,10 @@ class AlistPublic(object):
         return self.alist.post(endpoint, json=data)
 
     def preview(self, path):
+        """ 获取文件的预览URL。
+        :returns:
+            文件的预览URL。
+        """
         endpoint = f'{self.endpoint}/preview'
         data = {
             'path': path
@@ -26,6 +36,10 @@ class AlistPublic(object):
         return self.alist.post(endpoint, json=data)
 
     def search(self, path, keyword):
+        """ 搜索文件。需要开启，默认是关闭的。
+        :returns:
+            搜索的文件列表。
+        """
         endpoint = f'{self.endpoint}/search'
         data = {
             'path': path,
@@ -34,11 +48,26 @@ class AlistPublic(object):
         return self.alist.post(endpoint, json=data)
 
     def upload(self, files, path, password=None):
-        # Content Type 不再是json，而是 multipart/form-data
+        """ 上传文件到指定路径。
+        :returns:
+            上传结果。True表示成功，False表示失败。
+        """
+        # Content Type 是 multipart/form-data
         endpoint = f'{self.endpoint}/upload'
-        pass
+        data = {
+            'path': path,
+            'password': password,
+        }
+        # https://docs.python-requests.org/en/latest/user/advanced/#post-multiple-multipart-encoded-files
+        fs = [
+            ('files', (filename, open(filename, 'rb'))) for filename in files
+        ]
+        return self.alist.post(endpoint, files=fs, data=data)
 
     def settings(self):
+        """ 获取公开设置。
+        :returns:
+            公开设置。
+        """
         endpoint = f'{self.endpoint}/settings'
         return self.alist.get(endpoint)
-

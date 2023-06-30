@@ -67,7 +67,7 @@ class AlistClient(object):
             "Scheme": self.url.scheme,
             "Accept": "application/json, text/plain, */*",
             "Origin": self.base_url,
-            "Content-Type": "application/json;charset=UTF-8",
+            # "Content-Type": "application/json;charset=UTF-8", # requests 自动填充
         }
         request_kwargs = kwargs
         if "headers" in request_kwargs:
