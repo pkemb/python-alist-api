@@ -15,3 +15,67 @@ class AlistAdmin(object):
         endpoint = f'{self.endpoint}/login'
         # if login fail, will raise exception
         return self.alist.get(endpoint)
+
+    def settings(self):
+        pass
+
+    def settings_save(self):
+        pass
+
+    def settings_delete(self):
+        pass
+
+
+    def accounts(self):
+        pass
+
+    def account_create(self):
+        pass
+
+    def account_save(self):
+        pass
+
+
+    def drivers(self):
+        pass
+
+    def clear_cache(self):
+        pass
+
+
+    def metas(self):
+        pass
+
+    def meta_create(self):
+        pass
+
+    def meta_save(self):
+        pass
+
+    def meta_delete(self):
+        pass
+
+
+    def link(self):
+        pass
+
+    def files(self):
+        pass
+
+    def mkdir(self):
+        pass
+
+    def rename(self):
+        pass
+
+    def move(self):
+        pass
+
+    def copy(self):
+        pass
+
+    def folder(self):
+        pass
+
+    def refresh(self):
+        pass
