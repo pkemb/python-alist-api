@@ -159,3 +159,15 @@ class AlistClient(object):
         # return response
         return self.decode_response(response)
 
+    def delete(self, endpoint, **kwargs):
+        """
+        Send HTTP DELETE to the endpoint.
+
+        :param endpoint: The endpoint to send to.
+        :return:
+        """
+        request_kwargs = self.get_request_dict("DELETE", endpoint, **kwargs)
+        response = self.session.delete(self.get_endpoint_url(endpoint), **request_kwargs)
+        # return response
+        return self.decode_response(response)
+
