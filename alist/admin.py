@@ -2,10 +2,13 @@
 # -*- coding:utf-8 -*-
 # @Author: Kai Peng
 
+from alist.setting import AlistAaminSettings
+
 class AlistAdmin(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/admin'
+        self.settings = AlistAaminSettings(alist, self.endpoint)
 
     def login(self):
         """ 登录
@@ -15,30 +18,6 @@ class AlistAdmin(object):
         endpoint = f'{self.endpoint}/login'
         # if login fail, will raise exception
         return self.alist.get(endpoint)
-
-    def settings(self, group=0):
-        """ 获取管理员的设置
-        :returns:
-            管理员设置信息
-        """
-        endpoint = f'{self.endpoint}/settings'
-        params = {
-            'group': group
-        }
-        return self.alist.get(endpoint, params = params)
-
-    def settings_frontend(self):
-        return self.settings(group=0)
-
-    def settings_backend(self):
-        return self.settings(group=1)
-
-    def settings_save(self):
-        pass
-
-    def settings_delete(self):
-        pass
-
 
     def accounts(self):
         """ 获取账号列表。

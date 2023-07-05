@@ -4,10 +4,13 @@
 
 # doc: https://alist-doc.nn.ci/docs/api
 
+from alist.setting import AlistPublicSettings
+
 class AlistPublic(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/public'
+        self.settings = AlistPublicSettings(self.alist, self.endpoint)
 
     def path(self, path, page_num=1, page_size=30, password=None):
         """ 根据路径和密码请求文件或文件列表。
@@ -64,10 +67,3 @@ class AlistPublic(object):
         ]
         return self.alist.post(endpoint, files=fs, data=data)
 
-    def settings(self):
-        """ 获取公开设置。
-        :returns:
-            公开设置。
-        """
-        endpoint = f'{self.endpoint}/settings'
-        return self.alist.get(endpoint)

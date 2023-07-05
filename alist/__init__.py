@@ -10,6 +10,8 @@ from urllib.parse import urlparse
 from alist.public import AlistPublic
 from alist.admin import AlistAdmin
 import hashlib
+import alist.setting
+
 
 class AlistClient(object):
     """
