@@ -22,12 +22,16 @@ class AlistClient(object):
         base_url,
         password = None,
         authorization = None,
+        ssl_verify = True,
+        cert = None,
     ):
         self.base_url = base_url.rstrip('/')
         self.public = AlistPublic(self)
         self.admin  = None
         self.session = Session()
         self.password = ""
+        self.ssl_verify = ssl_verify
+        self.cert = cert
 
         self.url = urlparse(self.base_url)
 
@@ -119,6 +123,9 @@ class AlistClient(object):
             request_kwargs["headers"].update(headers)
         else:
             request_kwargs["headers"] = headers
+        request_kwargs['verify'] = self.ssl_verify
+        request_kwargs['cert']   = self.cert
+
         return request_kwargs
 
     def get_api_url(self, endpoint):
