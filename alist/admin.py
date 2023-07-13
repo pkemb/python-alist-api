@@ -3,12 +3,14 @@
 # @Author: Kai Peng
 
 from alist.setting import AlistAaminSettings
+from alist.driver import AlistAdminDrivers
 
 class AlistAdmin(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/admin'
         self.settings = AlistAaminSettings(alist, self.endpoint)
+        self.drivers  = AlistAdminDrivers(alist, self.endpoint)
 
     def login(self):
         """ 登录
@@ -36,14 +38,6 @@ class AlistAdmin(object):
     def account_delete(self):
         pass
 
-
-    def drivers(self):
-        """ 获取dricer列表，包含driver需要配置的字段列表
-        :returns:
-            driver列表
-        """
-        endpoint = f'{self.endpoint}/drivers'
-        return self.alist.get(endpoint)
 
     def clear_cache(self):
         """ 清理所有的缓存数据。
