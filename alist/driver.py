@@ -35,6 +35,9 @@ class AlistDriverAttribute(object):
     def get_name(self):
         return self.name
 
+    def is_required(self):
+        return self.required
+
     def __str__(self) -> str:
         return f'attr: {self.get_name()} value: {self.get_value()} required: {self.required}'
 
@@ -65,6 +68,13 @@ class AlistDriver(object):
 
     def get_name(self):
         return self.name
+
+    def get_required(self):
+        required = list()
+        for attr in self.attrs:
+            if attr.is_required():
+                required.append(attr.get_name())
+        return required
 
     def __str__(self) -> str:
         s = f"driver: {self.name}\n"

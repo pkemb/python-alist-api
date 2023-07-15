@@ -4,6 +4,7 @@
 
 from alist.setting import AlistAaminSettings
 from alist.driver import AlistAdminDrivers
+from alist.account import AlistAdminAccount, AlistAdminAccounts
 
 class AlistAdmin(object):
     def __init__(self, alist):
@@ -11,6 +12,8 @@ class AlistAdmin(object):
         self.endpoint = '/admin'
         self.settings = AlistAaminSettings(alist, self.endpoint)
         self.drivers  = AlistAdminDrivers(alist, self.endpoint)
+        self.account  = AlistAdminAccount(alist, self.endpoint)
+        self.accounts = AlistAdminAccounts(alist, self.endpoint)
 
     def login(self):
         """ 登录
@@ -20,24 +23,6 @@ class AlistAdmin(object):
         endpoint = f'{self.endpoint}/login'
         # if login fail, will raise exception
         return self.alist.get(endpoint)
-
-    def accounts(self):
-        """ 获取账号列表。
-        :returns:
-            账号列表。
-        """
-        endpoint = f'{self.endpoint}/accounts'
-        return self.alist.get(endpoint)
-
-    def account_create(self):
-        pass
-
-    def account_save(self):
-        pass
-
-    def account_delete(self):
-        pass
-
 
     def clear_cache(self):
         """ 清理所有的缓存数据。
