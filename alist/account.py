@@ -104,7 +104,7 @@ class AlistAdminAccount(object):
         return self._post_create(account)
 
 
-    def create_onedrive(self,
+    def create_Onedrive(self,
                         name,
                         zone,
                         internal_type,
@@ -129,6 +129,13 @@ class AlistAdminAccount(object):
         :param proxy:
         :param webdav_proxy:
         :param webdav_direct:
+
+        :param down_proxy_url:
+        :param extract_folder:
+        :param site_id:
+        :param root_folder:
+        :param order_by:
+        :param order_direction:
         """
         return self._create(type="Onedrive",
                             name=name,
@@ -143,12 +150,62 @@ class AlistAdminAccount(object):
                             webdav_direct=webdav_direct,
                             **kwargs)
 
+    def create_Native(self,
+                      name,
+                      root_folder,
+                      webdav_direct=False,
+                      **kwargs):
+        """
+        创建一个本地账号
+        :param name:
+        :param root_folder:
+        :param webdav_direct:
+        :param down_proxy_url:
+        :param extract_folder:
+        :param order_by:
+        :param order_direction:
+        """
+        return self._create(type='Native',
+                            name=name,
+                            root_folder=root_folder,
+                            webdav_direct=webdav_direct,
+                            **kwargs)
+
+    def create_Alist(self,
+                     name,
+                     site_url,
+                     access_token,
+                     proxy=False,
+                     webdav_proxy=False,
+                     webdav_direct=False,
+                     **kwargs):
+        """
+        创建一个Alist账号
+        :param name:
+        :param site_url:
+        :param access_token:
+        :param proxy:
+        :param webdav_proxy:
+        :param webdav_direct:
+        :param down_proxy_url:
+        :param extract_folder:
+        :param root_folder:
+        """
+        return self._create(type='Alist',
+                            name=name,
+                            site_url=site_url,
+                            access_token=access_token,
+                            proxy=proxy,
+                            webdav_proxy=webdav_proxy,
+                            webdav_direct=webdav_direct,
+                            **kwargs)
+
     def _delete(self, id):
         params = {'id': id}
         return self.alist.delete(self.endpoint, params = params)
 
     def delete(self, name):
-        account = self.alist.admin.accounts.get_by_name(name)
+        account = self.alist.admin.accounts.get_account(name)
         return self._delete(account['id'])
 
     def save(self, account: AlistAccount):
@@ -178,19 +235,12 @@ class AlistAdminAccounts(object):
             self.accounts.append(AlistAccount(**r))
         return self.accounts
 
-    def get_by_id(self, id):
+    def get_account(self, id_or_name):
         accounts = self.get()
         for acc in accounts:
-            if acc['id'] == id:
+            if acc['id'] == id_or_name or acc['name'] == id_or_name:
                 return acc
-        raise KeyError(id)
-
-    def get_by_name(self, name):
-        accounts = self.get()
-        for acc in accounts:
-            if acc['name'] == name:
-                return acc
-        raise KeyError(name)
+        raise KeyError(f'{id_or_name} not found')
 
     def __getitem__(self, index):
         return self.get()[index]
