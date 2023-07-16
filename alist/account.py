@@ -89,7 +89,7 @@ class AlistAdminAccount(object):
     def _create(self, **kwargs):
         # 检查必要的字段是否设置
         try:
-            driver = self.alist.admin.drivers.get_by_name(kwargs['type'])
+            driver = self.alist.admin.drivers.get_driver(kwargs['type'])
         except KeyError:
             raise KeyError(f"{kwargs['type']} not support")
 
