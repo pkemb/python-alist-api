@@ -10,7 +10,7 @@ class AlistPublic(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/public'
-        self.settings = AlistPublicSettings(self.alist, self.endpoint)
+        self.settings = AlistPublicSettings(self.alist, self, self.endpoint)
 
     def path(self, path, page_num=1, page_size=30, password=None):
         """ 根据路径和密码请求文件或文件列表。

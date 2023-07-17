@@ -10,7 +10,7 @@ class AlistAdmin(object):
     def __init__(self, alist):
         self.alist = alist
         self.endpoint = '/admin'
-        self.settings = AlistAaminSettings(alist, self.endpoint)
+        self.settings = AlistAaminSettings(alist, self, self.endpoint)
         self.drivers  = AlistAdminDrivers(alist, self.endpoint)
         self.account  = AlistAdminAccount(alist, self.endpoint)
         self.accounts = AlistAdminAccounts(alist, self.endpoint)
