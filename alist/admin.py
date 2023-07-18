@@ -5,6 +5,7 @@
 from alist.setting import AlistAaminSettings
 from alist.driver import AlistAdminDrivers
 from alist.account import AlistAdminAccount, AlistAdminAccounts
+from alist.meta    import AlistAdminMeta, AlistAdminMetas
 
 class AlistAdmin(object):
     def __init__(self, alist):
@@ -14,6 +15,9 @@ class AlistAdmin(object):
         self.drivers  = AlistAdminDrivers(alist, self.endpoint)
         self.account  = AlistAdminAccount(alist, self.endpoint)
         self.accounts = AlistAdminAccounts(alist, self.endpoint)
+
+        self.meta     = AlistAdminMeta(alist, self.endpoint)
+        self.metas    = AlistAdminMetas(alist, self.endpoint)
 
     def login(self):
         """ 登录
@@ -31,25 +35,6 @@ class AlistAdmin(object):
         """
         endpoint = f'{self.endpoint}/clear_cache'
         return self.alist.get(endpoint)
-
-
-    def metas(self):
-        """ 获取meta列表。
-        :returns:
-            meta列表。
-        """
-        endpoint = f'{self.endpoint}/metas'
-        return self.alist.get(endpoint)
-
-    def meta_create(self):
-        pass
-
-    def meta_save(self):
-        pass
-
-    def meta_delete(self):
-        pass
-
 
     def link(self, path):
         """ 返回真实的链接，且携带头，只提供给中转程序使用。
