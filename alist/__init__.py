@@ -9,7 +9,7 @@ import json
 from urllib.parse import urlparse
 from alist.public import AlistPublic
 from alist.admin import AlistAdmin
-import hashlib
+from alist import utils
 import alist.setting
 
 
@@ -38,14 +38,6 @@ class AlistClient(object):
         self.authorization = None
         self.login(password, authorization)
 
-    def calc_authorization(self, password):
-        """ 根据密码计算出 authorization
-        :param password: 登录密码
-        :returns: authorization
-        """
-        magic = f'https://github.com/Xhofe/alist-{password}'
-        return hashlib.md5(magic.encode('utf8')).hexdigest()
-
     def login(self, password = None, authorization = None):
         """ 登录
         :returns:
@@ -57,7 +49,7 @@ class AlistClient(object):
         self.authorization = authorization
         self.password = password
         if self.password != None and self.authorization == None:
-            self.authorization = self.calc_authorization(self.password)
+            self.authorization = utils.calc_authorization(password)
 
         if self.authorization:
             self.admin = AlistAdmin(self)
