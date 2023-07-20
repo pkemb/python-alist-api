@@ -10,6 +10,16 @@
 pip install python-alist-api
 ```
 
+## 测试
+
+安装`pytest`和`pytest-ordering`。
+
+```
+pip install pytest pytest-ordering
+```
+
+在[conftest.py](tests/conftest.py)设置`BASE_URL`和`PASSWORD`。在项目根目录执行`pytest`命令开始测试。
+
 ## 使用方法
 
 ### 示例1：创建alist客户端
