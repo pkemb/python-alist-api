@@ -39,9 +39,12 @@ class AlistClient(object):
         self.login(password, authorization)
 
     def login(self, password = None, authorization = None):
-        """ 登录
-        :returns:
-            登录成功返回Ture，登录失败触发异常。
+        """
+        使用password或authorization登录。
+
+        :param password: 密码
+        :param authorization: 授权码
+        :return: 登录成功返回Ture，登录失败触发异常。
         """
         if self.is_login():
             return True
@@ -57,20 +60,20 @@ class AlistClient(object):
         return False
 
     def is_login(self):
-        """ 是否登录
-        :returns:
-            如果已登录，返回True；否则返回Flase。
+        """
+        是否登录
+
+        :return: 如果已登录，返回True；否则返回Flase。
         """
         return self.authorization != None
 
     @staticmethod
     def decode_response(response):
-        """decode a response.
-        :returns:
-            Decoded JSON content as a dict, or raw text if content could not be
-            decoded as JSON.
-        :raises:
-            requests.HTTPError if the response contains an HTTP error status code.
+        """
+        解析服务器的响应。
+
+        :return: 将JSON解析为字典，如果不是JSON则返回原始字符串。
+        :raises: 如果响应包含HTTP错误则触发requests.HTTPError。
         """
         content_type = response.headers.get("content-type", "")
 
@@ -97,8 +100,12 @@ class AlistClient(object):
 
     def get_request_dict(self, method, endpoint, **kwargs):
         """
-        :param kwargs:
-        :return:
+        获取requests请求参数。
+
+        :param method: 请求方法，GET、POST或DELETE。
+        :param endpoint: URL端点。
+        :param kwargs: 其他可选参数。
+        :return: requests请求参数。
         """
         headers = {
             "Method": method,
@@ -122,27 +129,29 @@ class AlistClient(object):
 
     def get_api_url(self, endpoint):
         """
-        Return the api url including host and port for a given endpoint.
-        :param endpoint: service endpoint as str
-        :return: api url (including host and port) as str
+        返回指定端点的api url，不包含主机和端口。
+
+        :param endpoint: 服务端点。
+        :return: api url
         """
         return f'/api{endpoint}'
 
     def get_endpoint_url(self, endpoint):
         """
-        Return the complete url including host and port for a given endpoint.
-        :param endpoint: service endpoint as str
-        :return: complete url (including host and port) as str
+        返回指定端点的完整URL，包含主机和端口。
+
+        :param endpoint: 服务端点。
+        :return: 完整的URL。
         """
 
         return f'{self.base_url}{self.get_api_url(endpoint)}'
 
     def get(self, endpoint, **kwargs):
         """
-        Send HTTP GET to the endpoint.
+        发送HTTP GET请求到端点。
 
-        :param endpoint: The endpoint to send to.
-        :return:
+        :param endpoint: 发送请求的端点。
+        :return: 服务器返回的数据。
         """
         request_kwargs = self.get_request_dict("GET", endpoint, **kwargs)
         response = self.session.get(self.get_endpoint_url(endpoint), **request_kwargs)
@@ -150,10 +159,10 @@ class AlistClient(object):
 
     def post(self, endpoint, **kwargs):
         """
-        Send HTTP POST to the endpoint.
+        发送HTTP POST请求到端点。
 
-        :param endpoint: The endpoint to send to.
-        :return:
+        :param endpoint: 发送请求的端点。
+        :return: 服务器返回的数据。
         """
         request_kwargs = self.get_request_dict("POST", endpoint, **kwargs)
         response = self.session.post(self.get_endpoint_url(endpoint), **request_kwargs)
@@ -162,10 +171,10 @@ class AlistClient(object):
 
     def delete(self, endpoint, **kwargs):
         """
-        Send HTTP DELETE to the endpoint.
+        发送HTTP DELETE请求到端点。
 
-        :param endpoint: The endpoint to send to.
-        :return:
+        :param endpoint: 发送请求的端点。
+        :return: 服务器返回的数据。
         """
         request_kwargs = self.get_request_dict("DELETE", endpoint, **kwargs)
         response = self.session.delete(self.get_endpoint_url(endpoint), **request_kwargs)
