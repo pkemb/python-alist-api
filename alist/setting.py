@@ -22,6 +22,10 @@ empty_setting = {
 }
 
 class AlistSetting(dict):
+    """
+    描述Alist设置，包含key、value、description、type、group、access、values、version等信息。
+    必须设置key。对象初始化之后，只能修改value，其他属性不能修改。
+    """
     def __init__(self, **kwargs):
         super().__init__(deepcopy(empty_setting))
         if 'key' not in kwargs:
@@ -42,16 +46,20 @@ class AlistSetting(dict):
         raise NotImplementedError("can't delete any item")
 
     def get_value(self):
-        """ 获取设置值
-        :returns:
-            设置值
+        """
+        获取设置值
         """
         return self['value']
 
     def set_value(self, new):
-        """ 根据类型，对新值new进行判断，保存，最后返回新值
-        :returns:
-            新值new。
+        """
+        根据类型，对新值new进行判断，保存。
+
+        :param new: 如果type == 'bool'，则新值new只能是'true'或'false'。
+                    如果type == 'select'，则新值new必须是values指定的值。
+                    其他type无限制。
+
+        :return: 新值new。
         """
         stype = self['type']
         if stype == 'bool':
@@ -66,10 +74,13 @@ class AlistSetting(dict):
 
 
 class AlistAaminSettings(object):
+    """
+    Alist管理员设置
+    """
 
-    # 只读设置
     settings_ro = ['version']
-    # 可修改的设置
+    """只读设置"""
+
     settings_rw = ['title', 'logo', 'favicon', 'icon color',
                    'announcement', 'text types', 'audio types',
                    'video types', 'hide files', 'music cover', 'site beian',
@@ -82,6 +93,7 @@ class AlistAaminSettings(object):
                    'Visitor WebDAV username', 'Visitor WebDAV password',
                    'ocr api', 'enable search', 'Aria2 RPC url',
                    'Aria2 RPC secret',]
+    """可修改的设置"""
 
     def __init__(self, alist, admin, endpoint):
         self.alist = alist
@@ -96,10 +108,11 @@ class AlistAaminSettings(object):
             setattr(admin, attr, self._factory_get_or_update(key))
 
     def get(self, group = None):
-        """ 获取管理员的设置
-        :param group: 获取指定设置组。如果留空，返回所有设置。
-        :returns:
-            管理员设置信息
+        """
+        获取管理员设置。
+
+        :param group: 指定设置组。如果留空，返回所有设置。
+        :return: 管理员设置。
         """
         endpoint = f'{self.endpoint}/settings'
         if group is None:
@@ -113,36 +126,46 @@ class AlistAaminSettings(object):
         return self.get(group)
 
     def frontend(self):
+        """获取前端设置"""
         return self.get(group=group_front)
 
     def backend(self):
+        """获取后端设置"""
         return self.get(group=group_back)
 
     def other(self):
+        """获取其他设置"""
         return self.get(group=group_other)
 
-    def get_setting(self, key):
+    def get_setting(self, key) -> AlistSetting:
+        """
+        获取指定设置。
+
+        :param key: 设置的键值
+        """
         settings = self.get()
         for s in settings:
             if s['key'] == key:
                 return s
         raise KeyError(f'setting \'{key}\' not found')
 
-    def save(self, settings):
-        """ 保存设置
+    def save(self, settings: list):
+        """
+        保存设置
+
         :param settings: AlistSetting列表
-        :returns:
-            保存成功返回True
+        :return: 保存成功返回True
         """
         endpoint = f'{self.endpoint}/settings'
         return self.alist.post(endpoint, json=[s for s in settings])
 
     def _get_or_update(self, key, new = None):
-        """ 获取或更新设置的值，内部API
+        """
+        获取或更新设置的值，内部API
+
         :param key:
         :param new:
-        :returns:
-            设置的值
+        :return: 设置的值
         """
         s = self.get_setting(key)
         old = s.get_value()
@@ -164,6 +187,7 @@ class AlistAaminSettings(object):
         return _get_wrapper
 
     def delete(self):
+        """删除设置。未实现。"""
         endpoint = f'{endpoint}/setting'
         pass
 
@@ -175,6 +199,7 @@ class AlistPublicSettings(object):
                 'home emoji', 'animation', 'check down link', 'artplayer whitelist'
                 'artplayer autoSize', 'load type', 'default page size',
                 'enable search', 'no cors', 'no upload']
+    """公开设置的键值"""
 
     def __init__(self, alist, public, endpoint):
         self.alist = alist
@@ -185,9 +210,10 @@ class AlistPublicSettings(object):
             setattr(public, attr, self._factory_get_setting(key))
 
     def get(self, group = None):
-        """ 获取公开的设置
-        :returns:
-            公开的设置
+        """
+        获取公开的设置
+
+        :return: 公开的设置
         """
         endpoint = f'{self.endpoint}/settings'
         settings = self.alist.get(endpoint)
@@ -197,6 +223,11 @@ class AlistPublicSettings(object):
         return self.get(group)
 
     def get_setting(self, key):
+        """
+        获取指定设置。
+
+        :param key: 设置的键值
+        """
         settings = self.get()
         for s in settings:
             if s['key'] == key:

@@ -31,6 +31,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
     "sphinx.ext.githubpages",
+    "sphinx.ext.autosectionlabel"
 ]
 
 templates_path = ['_templates']
@@ -50,3 +51,6 @@ master_doc = "index"
 # html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
+# https://stackoverflow.com/questions/15394347/adding-a-cross-reference-to-a-subheading-or-anchor-in-another-page
+autosectionlabel_prefix_document = True
