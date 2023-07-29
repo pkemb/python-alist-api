@@ -1,69 +1,30 @@
-alist package
-=============
-
-Submodules
-----------
-
-alist.account module
---------------------
-
-.. automodule:: alist.account
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.admin module
-------------------
-
-.. automodule:: alist.admin
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.driver module
--------------------
-
-.. automodule:: alist.driver
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.meta module
------------------
-
-.. automodule:: alist.meta
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.public module
--------------------
-
-.. automodule:: alist.public
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.setting module
---------------------
-
-.. automodule:: alist.setting
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-alist.utils module
-------------------
-
-.. automodule:: alist.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+alist
+=====
 
 Module contents
 ---------------
 
-.. automodule:: alist
+.. autoclass:: alist.AlistClient
    :members:
    :undoc-members:
    :show-inheritance:
+
+   .. py:attribute:: public
+      :type: alist.public.AlistPublic
+
+   .. py:attribute:: admin
+      :type: alist.admin.AlistAdmin
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 2
+
+   alist.setting
+   alist.account
+   alist.admin
+   alist.driver
+   alist.meta
+   alist.public
+   alist.utils

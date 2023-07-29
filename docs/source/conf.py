@@ -38,8 +38,14 @@ exclude_patterns = []
 
 language = 'zh_CN'
 
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = "sphinx"
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+# The master toctree document.
+master_doc = "index"
 
 # html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
