@@ -54,7 +54,8 @@ empty_account = {
 
 class AlistAccount(dict):
     """
-    描述Alist账户信息
+    描述Alist账户信息。不同账户需要的信息各不相同。
+    更详细的信息请参考 :class:`AlistAdminDrivers <alist.driver.AlistAdminDrivers>`。
     """
     # account = deepcopy(empty_account)
     def __init__(self, **kwargs):
@@ -76,7 +77,7 @@ class AlistAccount(dict):
 
 class AlistAdminAccount(object):
     """
-    /account/ 相关API的实现
+    ``/api/admin/account`` API的实现。创建、删除、修改账号。
     """
     def __init__(self, alist, endpoint: str):
         self.alist = alist
@@ -117,25 +118,25 @@ class AlistAdminAccount(object):
                         webdav_direct=False,
                         **kwargs):
         """
-        创建一个Onedrive账号
-        :param name:
-        :param zone:
-        :param internal_type:
-        :param client_id:
-        :param client_secret:
-        :param redirect_uri:
-        :param refresh_token:
-        :param index:
-        :param proxy:
-        :param webdav_proxy:
-        :param webdav_direct:
+        创建一个Onedrive账号。
 
-        :param down_proxy_url:
-        :param extract_folder:
-        :param site_id:
-        :param root_folder:
-        :param order_by:
-        :param order_direction:
+        :param name: 账号名字。即虚拟地址。
+        :param zone: 区域。可以是 ``global``、``cn``、``us`` 或 ``de``。
+        :param internal_type: ``onedrive`` 或 ``sharepoint``。
+        :param client_id: client id
+        :param client_secret: client secret
+        :param redirect_uri: 重定向URI
+        :param refresh_token: 刷新token
+        :param proxy: 是否开启代码。默认为False。
+        :param webdav_proxy: 默认为False。
+        :param webdav_direct: 默认为False。
+        :param down_proxy_url: 可选参数，默认为None。
+        :param extract_folder: 可选参数，默认为None。可以填 ``front`` 或 ``back``。
+        :param site_id: 可选参数。sharepoint站点ID。默认为None。
+        :param root_folder: 可选参数。根目录路径。默认为None。
+        :param order_by: 可选参数。排序依据。默认为None。可以填 ``name``、``size`` 、``lastModifiedDateTime``。
+        :param order_direction: 可选参数。排序方向。默认为None。可以填 ``asc`` 或 ``desc``。
+        :return: 创建成功返回True。否则触发异常。
         """
         return self._create(type="Onedrive",
                             name=name,
@@ -156,14 +157,20 @@ class AlistAdminAccount(object):
                       webdav_direct=False,
                       **kwargs):
         """
-        创建一个本地账号
-        :param name:
-        :param root_folder:
-        :param webdav_direct:
-        :param down_proxy_url:
-        :param extract_folder:
-        :param order_by:
-        :param order_direction:
+        创建一个本地账号。
+
+        .. code-block:: python
+
+            client.admin.account.create_Native('/native_tmp', '/tmp')
+
+        :param name: 账号名字。即虚拟地址。
+        :param root_folder: 根目录路径。
+        :param webdav_direct: 默认为False。
+        :param down_proxy_url: 可选参数，默认为None。
+        :param extract_folder: 可选参数，默认为None。可以填 ``front`` 或 ``back``。
+        :param order_by: 可选参数。排序依据。默认为None。可以填 ``name``、``size`` 、``lastModifiedDateTime``。
+        :param order_direction: 可选参数。排序方向。默认为None。可以填 ``asc`` 或 ``desc``。
+        :return: 创建成功返回True。否则触发异常。
         """
         return self._create(type='Native',
                             name=name,
@@ -181,15 +188,21 @@ class AlistAdminAccount(object):
                      **kwargs):
         """
         创建一个Alist账号
-        :param name:
-        :param site_url:
-        :param access_token:
-        :param proxy:
-        :param webdav_proxy:
-        :param webdav_direct:
-        :param down_proxy_url:
-        :param extract_folder:
-        :param root_folder:
+
+        .. code-block:: python
+
+            client.admin.account.create_Alist('/another_alist', 'http://alist.xxxx.com', 'xxxxxx')
+
+        :param name: 账号名字。即虚拟地址。
+        :param site_url: Alist网站的URL。
+        :param access_token: 访问网站的token。
+        :param proxy: 是否开启代码。默认为False。
+        :param webdav_proxy: 默认为False。
+        :param webdav_direct:  默认为False。
+        :param down_proxy_url: 可选参数，默认为None。
+        :param extract_folder: 可选参数，默认为None。可以填 ``front`` 或 ``back``。
+        :param root_folder: 可选参数。根目录路径。
+        :return: 创建成功返回True。否则触发异常。
         """
         return self._create(type='Alist',
                             name=name,
@@ -205,19 +218,41 @@ class AlistAdminAccount(object):
         return self.alist.delete(self.endpoint, params = params)
 
     def delete(self, name):
+        """
+        删除一个账户。
+
+        .. code-block:: python
+
+            client.admin.account.delete('/another_alist')
+
+        :param name: 账号名字。即虚拟地址。
+        :return: 删除成功返回True。否则触发异常。
+        """
         account = self.alist.admin.accounts.get_account(name)
         return self._delete(account['id'])
 
     def save(self, account: AlistAccount):
         """
-        修改账号的设置并保存
+        保存修改后的账户。
+
+        .. code-block:: python
+
+            # 首先获取已有的账号。
+            account = client.admin.accounts.get_account('/native_tmp')
+            # 将 root_folder 修改为 /var
+            account['root_folder'] = '/var'
+            # 保存
+            client.admin.account.save(account)
+
+        :param account: 修改后的账号。
+        :return: 修改成功返回True。否则触发异常。
         """
         endpoint = f'{self.endpoint}/save'
         return self.alist.post(endpoint, json = account)
 
 class AlistAdminAccounts(object):
     """
-    alist账号列表
+    alist账号列表。获取账号。
     """
     accounts = list()
     def __init__(self, alist, endpoint):
@@ -225,8 +260,17 @@ class AlistAdminAccounts(object):
         self.endpoint = f'{endpoint}/accounts'
         self.accounts = deepcopy(self.accounts)
 
-    def get(self):
-        """获取账号列表并覆盖旧值
+    def get(self) -> list:
+        """
+        获取账号列表。
+
+        .. code-block:: python
+
+            accounts = client.admin.accounts.get()
+            # or
+            accounts = client.admin.accounts()
+
+        :return: 账号列表。:class:`AlistAccount <alist.account.AlistAccount>` 组成的列表。
         """
         self.accounts.clear()
 
@@ -235,7 +279,13 @@ class AlistAdminAccounts(object):
             self.accounts.append(AlistAccount(**r))
         return self.accounts
 
-    def get_account(self, id_or_name):
+    def get_account(self, id_or_name) -> AlistAccount:
+        """
+        根据账号ID或名字获取账号。
+
+        :param id_or_name: 账号ID或名字。
+        :return: 账号。
+        """
         accounts = self.get()
         for acc in accounts:
             if acc['id'] == id_or_name or acc['name'] == id_or_name:
