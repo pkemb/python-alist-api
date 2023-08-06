@@ -31,7 +31,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx_rtd_theme",
     "sphinx.ext.githubpages",
-    "sphinx.ext.autosectionlabel"
+    "sphinx.ext.autosectionlabel",
 ]
 
 templates_path = ['_templates']
@@ -54,3 +54,10 @@ html_static_path = ['_static']
 
 # https://stackoverflow.com/questions/15394347/adding-a-cross-reference-to-a-subheading-or-anchor-in-another-page
 autosectionlabel_prefix_document = True
+
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_member_order
+# This value selects if automatically documented members are sorted alphabetical (value 'alphabetical'), by member type (value 'groupwise') or by source order (value 'bysource'). The default is alphabetical.
+# Note that for source order, the module must be a Python module with the source code available.
+autodoc_member_order = 'bysource'
+
+
