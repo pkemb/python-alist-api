@@ -16,7 +16,8 @@ empty_meta = {
 
 class AlistMeta(dict):
     """
-    描述Alist meta信息
+    描述Alist meta信息。meta包含``path``、``password``、``hide``、``only_shows``、
+    ``upload``、``readme`` 和 ``id`` 字段。其中 ``hide`` 和 ``only_shows`` 是列表。
     """
 
     def __init__(self, **kwargs):
@@ -41,7 +42,7 @@ class AlistMeta(dict):
 
 class AlistAdminMeta(object):
     """
-    /admin/meta 相关API的实现
+    ``/api/admin/meta`` 相关API的实现。
     """
     def __init__(self, alist, endpoint: str):
         self.alist = alist
@@ -65,7 +66,9 @@ class AlistAdminMeta(object):
                only_shows = None,
                upload = False,
                readme = None):
-        """创建meta
+        """
+        创建meta
+
         :param path: 路径
         :param password: 访问密码
         :param hide: 隐藏文件列表
@@ -90,7 +93,9 @@ class AlistAdminMeta(object):
         return self.alist.delete(self.endpoint, params = params)
 
     def delete(self, path):
-        """删除meta
+        """
+        删除meta
+
         :param path: 路径
 
         >>> alist.admin.meta.delete('/path')
@@ -100,7 +105,9 @@ class AlistAdminMeta(object):
         return self._delete(meta['id'])
 
     def save(self, meta: AlistMeta):
-        """修改meta的设置并保存
+        """
+        修改meta的设置并保存
+
         :param meta: meta信息
         :type meta: AlistMeta
 
@@ -115,16 +122,18 @@ class AlistAdminMeta(object):
 
 class AlistAdminMetas(object):
     """
-    meta列表
+    API ``/api/admin/metas`` 的实现。
     """
     metas = list()
+
     def __init__(self, alist, endpoint):
         self.alist = alist
         self.endpoint = f'{endpoint}/metas'
         self.metas = deepcopy(self.metas)
 
     def get(self):
-        """获取meta列表
+        """
+        获取meta列表
 
         >>> client.admin.metas.get()
         [{'path': '/path', 'password': '789', 'hide': 'README.md', 'only_shows': '', 'upload': True, 'readme': '', 'id': 1}]
@@ -135,8 +144,10 @@ class AlistAdminMetas(object):
             self.metas.append(AlistMeta(**r))
         return self.metas
 
-    def get_meta(self, id_or_path):
-        """获取指定meta
+    def get_meta(self, id_or_path) -> AlistMeta:
+        """
+        获取指定meta
+
         :param id_or_path: meta id 或者是 meta path
 
         >>> client.admin.metas.get_meta('/path')
