@@ -22,6 +22,8 @@ pip install pytest pytest-ordering
 
 ## 使用方法
 
+完整的信息请参考[文档](https://python-alist-api.readthedocs.io/zh/latest/)。
+
 ### 示例1：创建alist客户端
 
 匿名登录，只能使用`/public` API。
