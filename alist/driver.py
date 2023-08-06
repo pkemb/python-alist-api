@@ -7,7 +7,8 @@ from typing import Any
 
 class AlistDriverAttribute(dict):
     """
-    驱动属性
+    驱动属性。驱动包含 ``name``、``label``、``type``、``default``、
+    ``values``、``required``、``description`` 等字段。所有字段初始化之后无法修改。
     """
 
     def __init__(self, **attr):
@@ -18,9 +19,11 @@ class AlistDriverAttribute(dict):
             super().__setitem__(key, attr[key])
 
     def get_name(self):
+        """获取驱动属性的名字"""
         return self['name']
 
     def is_required(self):
+        """属性是否必须提供。返回True表示必须提供。"""
         return self['required']
 
     def __str__(self) -> str:
@@ -37,7 +40,7 @@ class AlistDriverAttribute(dict):
 
 class AlistDriver(object):
     """
-    驱动
+    描述Alist驱动。一个驱动包含若干个属性。
     """
     def __init__(self, name, attrs):
         self.name = name
@@ -45,16 +48,23 @@ class AlistDriver(object):
         for attr in attrs:
             self.attrs.append(AlistDriverAttribute(**attr))
 
-    def get_attr(self, name):
+    def get_attr(self, name) -> AlistDriverAttribute:
+        """
+        获取驱动属性。
+
+        :param name: 属性的名字
+        """
         for attr in self.attrs:
             if name == attr['name']:
                 return attr
         raise KeyError(f"{name} not found")
 
     def get_name(self):
+        """获取驱动的名字"""
         return self.name
 
     def get_required(self):
+        """获取驱动必须提供的属性"""
         required = list()
         for attr in self.attrs:
             if attr['required']:
@@ -72,7 +82,7 @@ class AlistDriver(object):
 
 class AlistAdminDrivers(object):
     """
-    驱动列表
+    驱动列表。api ``/api/admin/drivers`` 的实现。
     """
     drivers = list()
 
@@ -82,9 +92,9 @@ class AlistAdminDrivers(object):
         self.drivers = deepcopy(self.drivers)
 
     def get(self):
-        """ 获取驱动列表，包含驱动需要配置的字段列表
-        :returns:
-            驱动列表
+        """ 获取所有驱动的列表，包含驱动必须提供的属性。
+
+        :return: 驱动列表
         """
         if len(self.drivers) == 0:
             results = self.alist.get(self.endpoint)
@@ -97,7 +107,12 @@ class AlistAdminDrivers(object):
     def __call__(self) -> Any:
         return self.get()
 
-    def get_driver(self, name):
+    def get_driver(self, name) -> AlistDriver:
+        """
+        获取指定名字的驱动。
+
+        :param name: 驱动的名字。
+        """
         drivers = self.get()
         for d in drivers:
             if d.get_name() == name:
